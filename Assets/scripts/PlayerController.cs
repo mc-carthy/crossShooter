@@ -9,6 +9,10 @@ public class PlayerController : MonoBehaviour {
 	private float moveSpeed = 2500f;
 	[SerializeField]
 	private int projectilesToSpawn = 4;
+	[SerializeField]
+	private float shootCooldown;
+	private float currentCooldown;
+	private bool canShoot = true;
 
 	private void Start () {
 		HideMouseCursor ();
@@ -17,6 +21,7 @@ public class PlayerController : MonoBehaviour {
 	private void Update () {
 		MovePlayerToMouse ();
 		FireOnMouseClick ();
+		ReduceCooldown ();
 	}
 
 	private void MovePlayerToMouse () {
@@ -31,12 +36,13 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	private void FireOnMouseClick () {
-		if (Input.GetMouseButtonDown (0)) {
+		if (Input.GetMouseButton (0) && canShoot) {
 			InstantiateProjectile ();
 		}
 	}
 
 	private void InstantiateProjectile () {
+		ResetCooldown ();
 		for (int i = 0; i < projectilesToSpawn; i++) {
 			ProjectileController newProjectile = Instantiate (
 				projectile,
@@ -46,6 +52,26 @@ public class PlayerController : MonoBehaviour {
 			newProjectile.directionToFire = DegreeToVector2 (360 * i / projectilesToSpawn);
 		}
 	}
+
+	private void ReduceCooldown () {
+		currentCooldown -= Time.deltaTime;
+		if (currentCooldown <= 0) {
+			canShoot = true;
+		}
+	}
+
+	private void ResetCooldown () {
+		canShoot = false;
+		currentCooldown = shootCooldown;
+	}
+
+	/*
+	private void DecreaseShootCooldown () {
+		if (Input.GetKeyDown (KeyCode.Space)) {
+			shootCooldown /= 2;
+		}
+	}
+	*/
 
 	private Vector2 DegreeToVector2(float degree)
 	{
