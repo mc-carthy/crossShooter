@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 using System.Collections;
 
 public class PlayerController : MonoBehaviour {
@@ -22,6 +23,12 @@ public class PlayerController : MonoBehaviour {
 		MovePlayerToMouse ();
 		FireOnMouseClick ();
 		ReduceCooldown ();
+	}
+
+	private void OnTriggerEnter2D (Collider2D trig) {
+		if (trig.tag == "enemy") {
+			ReloadScene ();
+		}
 	}
 
 	private void MovePlayerToMouse () {
@@ -73,9 +80,12 @@ public class PlayerController : MonoBehaviour {
 	}
 	*/
 
-	private Vector2 DegreeToVector2(float degree)
-	{
+	private Vector2 DegreeToVector2 (float degree) {
 		degree *= Mathf.Deg2Rad;
 		return new Vector2(Mathf.Cos(degree), Mathf.Sin(degree));
+	}
+
+	private void ReloadScene () {
+		SceneManager.LoadScene (SceneManager.GetActiveScene ().name, LoadSceneMode.Single);
 	}
 }
