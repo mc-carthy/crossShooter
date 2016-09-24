@@ -4,6 +4,8 @@ using System.Collections;
 public class PlayerController : MonoBehaviour {
 
 	[SerializeField]
+	private GameObject projectile;
+	[SerializeField]
 	private float moveSpeed = 2500f;
 
 	private void Start () {
@@ -12,6 +14,7 @@ public class PlayerController : MonoBehaviour {
 
 	private void Update () {
 		MovePlayerToMouse ();
+		FireOnMouseClick ();
 	}
 
 	private void MovePlayerToMouse () {
@@ -23,5 +26,19 @@ public class PlayerController : MonoBehaviour {
 
 	private void HideMouseCursor () {
 		Cursor.visible = false;
+	}
+
+	private void FireOnMouseClick () {
+		if (Input.GetMouseButtonDown (0)) {
+			InstantiateProjectile ();
+		}
+	}
+
+	private void InstantiateProjectile () {
+		Instantiate (
+			projectile,
+			transform.position,
+			transform.rotation
+		);
 	}
 }
