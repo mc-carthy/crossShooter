@@ -4,9 +4,11 @@ using System.Collections;
 public class PlayerController : MonoBehaviour {
 
 	[SerializeField]
-	private GameObject projectile;
+	private ProjectileController projectile;
 	[SerializeField]
 	private float moveSpeed = 2500f;
+	[SerializeField]
+	private int projectilesToSpawn = 4;
 
 	private void Start () {
 		HideMouseCursor ();
@@ -35,10 +37,19 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	private void InstantiateProjectile () {
-		Instantiate (
-			projectile,
-			transform.position,
-			transform.rotation
-		);
+		for (int i = 0; i < projectilesToSpawn; i++) {
+			ProjectileController newProjectile = Instantiate (
+				projectile,
+				transform.position,
+				transform.rotation
+			) as ProjectileController;
+			newProjectile.directionToFire = DegreeToVector2 (360 * i / projectilesToSpawn);
+		}
+	}
+
+	private Vector2 DegreeToVector2(float degree)
+	{
+		degree *= Mathf.Deg2Rad;
+		return new Vector2(Mathf.Cos(degree), Mathf.Sin(degree));
 	}
 }
