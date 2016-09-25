@@ -3,14 +3,16 @@ using System.Collections;
 
 public class EnemyController : MonoBehaviour {
 
-	[SerializeField]
-	private PlayerController player;
+	private GameObject player;
 	[SerializeField]
 	private float moveSpeed = 0.5f;
 	private Vector2 direction;
 
 	private void Start () {
-		direction = player.transform.position - transform.position;
+		player = GameObject.FindGameObjectWithTag("Player");
+		if (player != null) {
+			direction = (player.transform.position - transform.position).normalized;
+		}
 	}
 
 	private void Update () {
@@ -19,6 +21,7 @@ public class EnemyController : MonoBehaviour {
 
 	private void OnTriggerEnter2D (Collider2D trig) {
 		if (trig.tag == "projectile") {
+			Destroy (trig.gameObject);
 			Destroy (gameObject);
 		}
 	}
