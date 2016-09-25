@@ -7,6 +7,7 @@ public class EnemySpawner : MonoBehaviour {
 	private EnemyController enemy;
 	[SerializeField]
 	private float spawnRate = 2f;
+	private float maxSpawnRate = 1f;
 	private bool canSpawn = true;
 	private Vector3[] spawnPositions = new Vector3[] {
 		new Vector3 (10, 6, 0),
@@ -17,6 +18,10 @@ public class EnemySpawner : MonoBehaviour {
 
 	private void Start () {
 		StartCoroutine (SpawnEnemies(spawnRate));
+	}
+
+	public void StopSpawning () {
+		canSpawn = false;
 	}
 
 	private void SpawnEnemiesAtCorners() {
@@ -34,6 +39,9 @@ public class EnemySpawner : MonoBehaviour {
 		while (canSpawn) {
 			yield return new WaitForSeconds (spawnRate);
 			SpawnEnemiesAtCorners ();
+			if (spawnRate > maxSpawnRate) {
+				spawnRate *= 0.9f;
+			}
 		}
 	}
 }
